@@ -1,0 +1,12 @@
+Usuario
+    Teléfono
+    Hash de la contraseña
+    Provincia dónde desarrolla el trabajo
+    Permisos (0 significa usuario y 1 administrador)
+    Emails
+        Total (total de emails recibidos)
+        Phishing (email de campaña interna enviados para mejorar la seguridad de la empresa)
+        Clicados (interacciones realizadas con email de phishing, se ha pulsado e interactuado)
+    Fechas (listado de días en los que se ha cambiado contraseña por parte del usuario)
+    IPs (diferente listado de IPs desde los que se ha cambiado la contraseña)
+        

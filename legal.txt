@@ -1,0 +1,5 @@
+Web (nombre de la web)
+    Cookies (¿tiene la web la política de cookies bien? 0 significa no y 1 significa si)
+    Aviso (¿tiene la web la política de aviso legal bien? 0 significa no y 1 significa si)
+    Protección de datos (¿tiene la web la política de protección de datos bien? 0 significa no y 1 significa si)
+    Creación (fecha de creación de la página web)

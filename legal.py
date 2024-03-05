@@ -4,7 +4,7 @@ import json
 f=open('legal_data_online.json', 'r')
 legal_data=json.load(f)
 
-conn = sqlite3.connect('legal.db')
+conn = sqlite3.connect('misdatabase.db')
 cur = conn.cursor()
 
 cur.execute('''

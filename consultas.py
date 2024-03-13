@@ -1,23 +1,38 @@
 import sqlite3
 import pandas as pd
 
-# Conecta con la base de datos
-conn = sqlite3.connect('user.db')
+# Conexión a la base de datos
+conn = sqlite3.connect('misdatabase.db')
 
-# Realiza la consulta para obtener los datos necesarios
+# Consulta para obtener los datos de fechas y contraseñas
 query = '''
-    SELECT u.username, u.telefono, u.contrasena, u.provincia, e.total, e.phishing, f.fecha, i.ip, u.permisos
+    SELECT u.username, COUNT(fi.fecha) AS total_fechas, COUNT(DISTINCT fi.ip) AS total_ips,
+           SUM(u.email_phishing) AS total_phishing,
+           MIN(u.email_total) AS min_total_emails, MAX(u.email_total) AS max_total_emails,
+           MIN(u.email_phishing) AS min_phishing_emails, MAX(u.email_phishing) AS max_phishing_emails
     FROM usuarios u
-    LEFT JOIN emails e ON u.username = e.username
-    LEFT JOIN fechas f ON u.username = f.username
-    LEFT JOIN ips i ON u.username = i.username
+    LEFT JOIN fechas_ips fi ON u.username = fi.username
+    GROUP BY u.username
 '''
 
-# Carga los datos en un DataFrame
-df_users = pd.read_sql_query(query, conn)
+# Leer los resultados de la consulta en un DataFrame
+df = pd.read_sql_query(query, conn)
 
-# Cierra la conexión
+# Calcular los valores requeridos
+num_muestras = len(df)
+media_desviacion_fechas = df['total_fechas'].agg(['mean', 'std'])
+media_desviacion_ips = df['total_ips'].agg(['mean', 'std'])
+media_desviacion_phishing = df['total_phishing'].agg(['mean', 'std'])
+min_max_total_emails = df[['min_total_emails', 'max_total_emails']].agg(['min', 'max'])
+min_max_phishing_emails = df[['min_phishing_emails', 'max_phishing_emails']].agg(['min', 'max'])
+
+# Imprimir los resultados
+print("Número de muestras:", num_muestras)
+print("Media y desviación estándar de fechas cambiadas:", media_desviacion_fechas)
+print("Media y desviación estándar de IPs detectadas:", media_desviacion_ips)
+print("Media y desviación estándar de emails de phishing:", media_desviacion_phishing)
+print("Valor mínimo y máximo de total de emails recibidos:", min_max_total_emails)
+print("Valor mínimo y máximo de emails de phishing para administradores:", min_max_phishing_emails)
+
+# Cerrar la conexión a la base de datos
 conn.close()
-
-# Visualiza el conjunto de datos
-print(df_users.head(20))

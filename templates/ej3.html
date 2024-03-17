@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas de Email de Phishing</title>
+</head>
+<body>
+    <h1>Estadísticas de Email de Phishing</h1>
+
+    <h2>Agrupación por tipo de permisos de usuario:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Permisos</th>
+                <th>Conteo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for index, row in df_permisos.iterrows() %}
+            <tr>
+                <td>{{ row['permisos'] }}</td>
+                <td>{{ row['count'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Estadísticas de Email de Phishing para cada agrupación de permisos:</h2>
+    {% for permiso, stats in stats_por_permisos.items() %}
+    <h3>Permisos: {{ permiso }}</h3>
+    <ul>
+        <li>Número de observaciones: {{ stats['num_observaciones'] }}</li>
+        <li>Número de valores ausentes: {{ stats['valores_ausentes'] }}</li>
+        <li>Mediana: {{ stats['mediana'] }}</li>
+        <li>Media: {{ stats['media'] }}</li>
+        <li>Varianza: {{ stats['varianza'] }}</li>
+        <li>Valor mínimo: {{ stats['valor_min'] }}</li>
+        <li>Valor máximo: {{ stats['valor_max'] }}</li>
+    </ul>
+    {% endfor %}
+
+    <h2>Estadísticas de Email de Phishing para usuarios con contraseñas débiles:</h2>
+    <ul>
+        <li>Número de observaciones: {{ stats_contraseñas_debiles['num_observaciones'] }}</li>
+        <li>Número de valores ausentes: {{ stats_contraseñas_debiles['valores_ausentes'] }}</li>
+        <li>Mediana: {{ stats_contraseñas_debiles['mediana'] }}</li>
+        <li>Media: {{ stats_contraseñas_debiles['media'] }}</li>
+        <li>Varianza: {{ stats_contraseñas_debiles['varianza'] }}</li>
+        <li>Valor mínimo: {{ stats_contraseñas_debiles['valor_min'] }}</li>
+        <li>Valor máximo: {{ stats_contraseñas_debiles['valor_max'] }}</li>
+    </ul>
+
+    <h2>Usuarios con contraseñas débiles:</h2>
+    <ul>
+        {% for username in contraseñas_debiles %}
+        <li>{{ username }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

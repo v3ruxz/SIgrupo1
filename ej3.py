@@ -3,7 +3,6 @@ import pandas as pd
 import statistics
 import hashlib
 
-
 '''  
 Valores pedidos del ejercicio 3
 •	Numero de observaciones
@@ -31,14 +30,16 @@ def descifrar_md5(hash):
     return None
 
 def calcular_datos(df):
-    print("Numero de observaciones: " + str(sum(df['email_phishing'])))
-    print("Numero de valores ausentes: " + str((df['email_phishing'].isnull().sum())))
-    print("Mediana: " + str(df['email_phishing'].median()))
-    print("Media: " + str(df['email_phishing'].mean()))
-    print("Varianza: " + str(statistics.variance(df['email_phishing'])))
-    print("Valor maximo: " + str(df['email_phishing'].max()))
-    print("Valor minimo: " + str(df['email_phishing'].min()))
-
+    data = {
+        "Numero de observaciones": str(sum(df['email_phishing'])),
+        "Numero de valores ausentes": str((df['email_phishing'].isnull().sum())),
+        "Mediana": str(df['email_phishing'].median()),
+        "Media": str(df['email_phishing'].mean()),
+        "Varianza": str(statistics.variance(df['email_phishing'])),
+        "Valor maximo": str(df['email_phishing'].max()),
+        "Valor minimo": str(df['email_phishing'].min())
+    }
+    return data
 
 if __name__ == '__main__':
 
@@ -64,19 +65,34 @@ if __name__ == '__main__':
     # DataFrames
     df_users0 = df_base.loc[df_base.permisos == 0]
     df_users1 = df_base.loc[df_base.permisos == 1]
-
     query_contraseñas_debiles = f"SELECT * FROM usuarios WHERE username IN ({','.join(['?'] * len(contraseñas_debiles))})"
     df_usersWeak = pd.read_sql_query(query_contraseñas_debiles, conn, params=contraseñas_debiles)
-
     query_contraseñas_no_debiles = f"SELECT * FROM usuarios WHERE username IN ({','.join(['?'] * len(contraseñas_no_debiles))})"
     df_usersNotWeak = pd.read_sql_query(query_contraseñas_no_debiles, conn, params=contraseñas_no_debiles)
 
-    print(df_base)
     print("\n -Usuarios permisos 0:")
-    calcular_datos(df_users0)
+    data_users0 = calcular_datos(df_users0)
+    for keys, values in data_users0.items():
+        print(keys, end=": ")
+        print(values)
+
     print("\n -Usuarios permisos 1:")
-    calcular_datos(df_users1)
+    data_users1 = calcular_datos(df_users1)
+    for keys, values in data_users1.items():
+        print(keys, end=": ")
+        print(values)
+
     print("\n -Usuarios con contraseñas débiles:")
-    calcular_datos(df_usersWeak)
+    data_usersWeak = calcular_datos(df_usersWeak)
+    for keys, values in data_usersWeak.items():
+        print(keys, end=": ")
+        print(values)
+
     print("\n -Usuarios con contraseñas no débiles:")
-    calcular_datos(df_usersNotWeak)
+    data_usersNotWeak = calcular_datos(df_usersNotWeak)
+    for keys, values in data_usersNotWeak.items():
+        print(keys, end=": ")
+        print(values)
+
+    # Cerrar la conexión
+    conn.close()
